@@ -8,16 +8,16 @@
     > 当圆括号出现在匿名函数的末尾想要调用函数时，它会默认将函数当成是函数声明。  
     当圆括号包裹函数时，它会默认将函数作为表达式去解析，而不是函数声明。
 
-作用js 多个文件之间互不影响, 不会存在命名冲突, 后面的把前面的覆盖掉
+    作用js 多个文件之间互不影响, 不会存在命名冲突, 后面的把前面的覆盖掉
 
 2. duck-type 鸭式类型, 不是继承与类或者特定的接口, 只是由当前的方法和属性的集合决定
 类数组如, 我自己的理解
     
-var arrLike = {
-1: 'xiaoshier',
-age: 20,
-length: 2
-}
+    var arrLike = {
+        1: 'xiaoshier',
+        age: 20,
+        length: 2
+    }
 
 4. 闭包函数: 有权访问另一个函数作用域中的变量的函数
     闭包是可以访问其他函数内部变量的函数, 一般是其他函数返回的函数
@@ -26,6 +26,7 @@ length: 2
     常见的形式有一个函数包含另一个匿名函数, 并且返回这个匿名函数  
 
 5. 匿名函数的执行环境是全局环境,其中的 this 指全局对象
+
 6. 函数作用域链和执行环境
 
     某个函数被调用时, 会创建执行环境, 命名参数和 arguments 初始化函数的*活动对象*
@@ -87,6 +88,7 @@ length: 2
     x + y;
 
 11. slice(begin[, end]) 浅复制一个数组, 返回一个新的数组, 包含 begin, 不包含 end
+
 12. for 循环复制数组, 是值赋值, 两个再无关系
     
     var arr1 = [1, 2, 3, 4];
@@ -120,103 +122,104 @@ length: 2
         foo(); => undefined;
 
 14. 对象
+
 - 对象是一些无序的属性的集合, 属性的值可以是原始类型, 也可以是引用类型
 - 创建对象
 
-1. 可以是对象字面量的方式, 也可以是创建 Object 实例的方式
+    1. 可以是对象字面量的方式, 也可以是创建 Object 实例的方式
 
-        var obj = {
-            name: 'xiaoshier',
-            age: 20,
-            alertName: function(){
+            var obj = {
+                name: 'xiaoshier',
+                age: 20,
+                alertName: function(){
+                    alert(this.name);
+                }
+            }
+
+            var obj2 = new Object();
+            obj2.name = 'xiaoshier';
+            obj2.age = 20;
+            obj2.alertName = function(){
                 alert(this.name);
             }
-        }
-
-        var obj2 = new Object();
-        obj2.name = 'xiaoshier';
-        obj2.age = 20;
-        obj2.alertName = function(){
-            alert(this.name);
-        }
 
 
-2. 使用其他方式, 创建格式相同的对象
+    2. 使用其他方式, 创建格式相同的对象
 
-- 构造函数
+    - 构造函数
+                
+            function Person() {
+                this.name = 'xiashier';
+                this.age = 20;
+                this.alertName = function() {
+                    alert(this.name);
+                }
+            }
+
+        构造函数通过函数创建一个对象的属性和方法, 通过创建构造函数的实例(通过 `new`关键字来创建一个新的对象), 来达到创建对象  
+        构造函数创造对象, 新建的构造函数的实例的这个对象, 会重新创建构造函数中的属性和方法,  
+        使得方法不能复用, 每个对象都有一个方法的函数, 造成内存浪费等等  
+
+
+    - 原型
+
+        每个函数都有一个原型属性, 这个属性是指向原型对象的指针  
+        可以通过在原型上创建属性和方法, 达到对象实例共享这些属性和方法  
+        构造函数有个属性 `prototype` 指向原型对象, 原型对象有个 `contructor`属性, 指向构造函数  
+        实例有个内部属性 [[prototype]] 指向原型对象; 现代浏览器可以通过 `__proto__` 方法访问原型对象  
+        如果在创建实例后重新定义原型, 那么原来的实例, 无法指向新创建的原型
             
-        function Person() {
-            this.name = 'xiashier';
-            this.age = 20;
-            this.alertName = function() {
+
+            function Person() {}
+            Person.prototype = {
+                constructor: Person,
+                name: 'dada'
+            }
+            var person1 = new Person();
+            person1.name => dada
+            //此处 Person 的 prototype 指针指向了一个新的对象(还记得创建对象有字面量的方法么)  
+            Person 的创建了一个新的原型对象, 之前的实例 person1 的原型还是原来的
+            Person.prototype = {
+                constructor: Person,
+                name: 'xiaoshier'
+            }
+            person1.name => dada
+
+        原生引用类型的原型(Array, Function, String, Number), 原生对象也是按照构造函数,
+        加原型创建的, 都是在 Object() 的基础上创建构造函数, 不同的引用类型, 重写了 Object 的某些方法  
+        如 toString等
+
+        缺点: 对象实例, 共享原型上的属性和方法, 如果属性的值是引用类型, 那么任意一个实例修改该属性的值,
+        其他实例的该值也发生了变化  
+        原型无法传递参数
+
+
+            function Person() {};
+            Person.prototype.name = 'xiaoshier';
+            Person.prototype.age = 20;
+            Person.prototype.alertName = function() {
                 alert(this.name);
             }
-        }
 
-    构造函数通过函数创建一个对象的属性和方法, 通过创建构造函数的实例(通过 `new`关键字来创建一个新的对象), 来达到创建对象  
-    构造函数创造对象, 新建的构造函数的实例的这个对象, 会重新创建构造函数中的属性和方法,  
-    使得方法不能复用, 每个对象都有一个方法的函数, 造成内存浪费等等  
-
-
-- 原型
-
-    每个函数都有一个原型属性, 这个属性是指向原型对象的指针  
-    可以通过在原型上创建属性和方法, 达到对象实例共享这些属性和方法  
-    构造函数有个属性 `prototype` 指向原型对象, 原型对象有个 `contructor`属性, 指向构造函数  
-    实例有个内部属性 [[prototype]] 指向原型对象; 现代浏览器可以通过 `__proto__` 方法访问原型对象  
-    如果在创建实例后重新定义原型, 那么原来的实例, 无法指向新创建的原型
+    - 构造函数结合原型
         
+        一般用构造函数创建属性, 用原型创建方法, 实例调用方法时, 只不过是指向该方法的指针  
+        通过构造函数来创建公用属性, 属性值可以是基本类型, 也可以是引用类型, 实例更改引用类型值时,
+        不会对其他实例造成影响, 因为实例之间是一个独立的对象
 
-        function Person() {}
-        Person.prototype = {
-            constructor: Person,
-            name: 'dada'
-        }
-        var person1 = new Person();
-        person1.name => dada
-        //此处 Person 的 prototype 指针指向了一个新的对象(还记得创建对象有字面量的方法么)  
-        Person 的创建了一个新的原型对象, 之前的实例 person1 的原型还是原来的
-        Person.prototype = {
-            constructor: Person,
-            name: 'xiaoshier'
-        }
-        person1.name => dada
+    - 寄生构造函数(创建实例中的方法是他们各自的方法, 没能做到函数复用, 效率降低, 与构造函数类似)
 
-    原生引用类型的原型(Array, Function, String, Number), 原生对象也是按照构造函数,
-    加原型创建的, 都是在 Object() 的基础上创建构造函数, 不同的引用类型, 重写了 Object 的某些方法  
-    如 toString等
+        封装一个函数, 该函数创建一个新对象, 给这个对象添加属性和方法, 并返回这个对象  
+        仍然使用 `new` 来创建新的对象, 但实例和构造函数之间无关系
 
-    缺点: 对象实例, 共享原型上的属性和方法, 如果属性的值是引用类型, 那么任意一个实例修改该属性的值,
-    其他实例的该值也发生了变化  
-    原型无法传递参数
+            function Person( name ) {
+                var o = new Object();
+                o.name = this.name;
+                return o;
+            }
+            var person1 = new Person('xiaoshier');
 
-
-        function Person() {};
-        Person.prototype.name = 'xiaoshier';
-        Person.prototype.age = 20;
-        Person.prototype.alertName = function() {
-            alert(this.name);
-        }
-
-- 构造函数结合原型
-    
-    一般用构造函数创建属性, 用原型创建方法, 实例调用方法时, 只不过是指向该方法的指针  
-    通过构造函数来创建公用属性, 属性值可以是基本类型, 也可以是引用类型, 实例更改引用类型值时,
-    不会对其他实例造成影响, 因为实例之间是一个独立的对象
-
-- 寄生构造函数(创建实例中的方法是他们各自的方法, 没能做到函数复用, 效率降低, 与构造函数类似)
-
-    封装一个函数, 该函数创建一个新对象, 给这个对象添加属性和方法, 并返回这个对象  
-    仍然使用 `new` 来创建新的对象, 但实例和构造函数之间无关系
-
-        function Person( name ) {
-            var o = new Object();
-            o.name = this.name;
-            return o;
-        }
-        var person1 = new Person('xiaoshier');
-
-- 稳妥构造函数
+    - 稳妥构造函数
 
 
 
