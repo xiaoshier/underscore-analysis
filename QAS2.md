@@ -48,25 +48,25 @@
 
 
 9. underscorejs 中的 invoke 方法, 使用了 value[method]
-    
+
     arr = [1, 9, 19, 10];
     arr['sort'].apply(arr);
     等价于 arr.sort();
 
-       _.invoke = function(obj, method) {
+    _.invoke = function(obj, method) {
         var args = slice.call(arguments, 2);//获得传入第2个之后面的参数
         var isFunc = _.isFunction(method);
         return _.map(obj, function(value) {
-            var func = isFunc ? method : value[method];
-            //如果不是函数, 则调用 value 的 method 方法,
-            // eg: value 是个数组, method 的值是 sort, 那么 value[sort] 是数组封装好的函数,
-            // 在调用时使用 value[method].apply(value),即可
-            return func == null ? func : func.apply(value, args);
-        });
+                var func = isFunc ? method : value[method];
+                //如果不是函数, 则调用 value 的 method 方法,
+                // eg: value 是个数组, method 的值是 sort, 那么 value[sort] 是数组封装好的函数,
+                // 在调用时使用 value[method].apply(value),即可
+                return func == null ? func : func.apply(value, args);
+                });
     };
 
     value[method]; 会去调用原型上的方法, 如果这个方法存在, 返回这个方法, 如果不存在, 返回 undefined
-    
+
     eg: var arr = [1, 3, 2, 5];
     method = 'sort';
     var value; 或者 value = [];
@@ -76,16 +76,16 @@
     eg: method = 'sort';
     var value = {};
     value[method] => undefined
-    
+
 10. return [expression]; 终止函数, 返回一个指定值, 遇见 return 后, 函数结束
     若无[ expression ] 返回 undefined
 
-    return
-    x + y;
+        return
+        x + y;
 
-    等价于
-    return;
-    x + y;
+        等价于
+        return;
+        x + y;
 
 11. slice(begin[, end]) 浅复制一个数组, 返回一个新的数组, 包含 begin, 不包含 end
 
