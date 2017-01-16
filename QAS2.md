@@ -34,48 +34,45 @@
 7. 活动对象
 
 8. 函数调用 funName()();
-    ```javascript
-    var func = function(key) {
-        return function(obj) {
-            return obj == null? void 0 : obj[key];
+
+        var func = function(key) {
+            return function(obj) {
+                return obj == null? void 0 : obj[key];
+            }
         }
-    }
 
-    var obj = {name: 'xiaoshier', age: 20};
-    func(key)(obj); =>'xiaoshier'
-    ```
-
-
+        var obj = {name: 'xiaoshier', age: 20};
+        func(key)(obj); =>'xiaoshier'
 
 9. underscorejs 中的 invoke 方法, 使用了 value[method]
 
-    arr = [1, 9, 19, 10];
-    arr['sort'].apply(arr);
-    等价于 arr.sort();
+        arr = [1, 9, 19, 10];
+        arr['sort'].apply(arr);
+        等价于 arr.sort();
 
-    _.invoke = function(obj, method) {
-        var args = slice.call(arguments, 2);//获得传入第2个之后面的参数
-        var isFunc = _.isFunction(method);
-        return _.map(obj, function(value) {
-                var func = isFunc ? method : value[method];
-                //如果不是函数, 则调用 value 的 method 方法,
-                // eg: value 是个数组, method 的值是 sort, 那么 value[sort] 是数组封装好的函数,
-                // 在调用时使用 value[method].apply(value),即可
-                return func == null ? func : func.apply(value, args);
-                });
-    };
+        _.invoke = function(obj, method) {
+            var args = slice.call(arguments, 2);//获得传入第2个之后面的参数
+            var isFunc = _.isFunction(method);
+            return _.map(obj, function(value) {
+                    var func = isFunc ? method : value[method];
+                    //如果不是函数, 则调用 value 的 method 方法,
+                    // eg: value 是个数组, method 的值是 sort, 那么 value[sort] 是数组封装好的函数,
+                    // 在调用时使用 value[method].apply(value),即可
+                    return func == null ? func : func.apply(value, args);
+                    });
+        };
 
-    value[method]; 会去调用原型上的方法, 如果这个方法存在, 返回这个方法, 如果不存在, 返回 undefined
+        value[method]; 会去调用原型上的方法, 如果这个方法存在, 返回这个方法, 如果不存在, 返回 undefined
 
-    eg: var arr = [1, 3, 2, 5];
-    method = 'sort';
-    var value; 或者 value = [];
-    value[method] => 返回一个函数
-    value[method].call(arr); => 返回重排后的数组
+        eg: var arr = [1, 3, 2, 5];
+        method = 'sort';
+        var value; 或者 value = [];
+        value[method] => 返回一个函数
+        value[method].call(arr); => 返回重排后的数组
 
-    eg: method = 'sort';
-    var value = {};
-    value[method] => undefined
+        eg: method = 'sort';
+        var value = {};
+        value[method] => undefined
 
 10. return [expression]; 终止函数, 返回一个指定值, 遇见 return 后, 函数结束
     若无[ expression ] 返回 undefined
@@ -90,19 +87,19 @@
 11. slice(begin[, end]) 浅复制一个数组, 返回一个新的数组, 包含 begin, 不包含 end
 
 12. for 循环复制数组, 是值赋值, 两个再无关系
-    
-    var arr1 = [1, 2, 3, 4];
-    var arr2 = [];
-    for (var i = 0, length = arr1.length; i < length; i++) {
-        arr2[i] = arr1[i]; //此处是把 arr1[i]中的值, 传递给arr2[i], arr1 和 arr2 是两个不相干的数组
-    }
+        
+        var arr1 = [1, 2, 3, 4];
+        var arr2 = [];
+        for (var i = 0, length = arr1.length; i < length; i++) {
+            arr2[i] = arr1[i]; //此处是把 arr1[i]中的值, 传递给arr2[i], arr1 和 arr2 是两个不相干的数组
+        }
 
 13. 变量提升
 
-- js 解析器在解析 js 代码时, 会先将变量和函数预编译一遍, 将变量和函数提升至函数最前面, 而变量和函数在解析前, 先解析变量,
-只是将变量的标识符提升, 不将变量的值一块儿提升, 然后是解析函数, 如果函数与变量有重命名的情况下, 函数会覆盖变量, 函数声明会
-把函数一起提升, 也就是在函数定义之前, 可以调用函数, **js 解析器在执行阶段, 遇见函数声明时会跳过, 不再进行解析,**
-- 函数自身内部也存在变量提升, 原理同上
+    - js 解析器在解析 js 代码时, 会先将变量和函数预编译一遍, 将变量和函数提升至函数最前面, 而变量和函数在解析前, 先解析变量,
+    只是将变量的标识符提升, 不将变量的值一块儿提升, 然后是解析函数, 如果函数与变量有重命名的情况下, 函数会覆盖变量, 函数声明会
+    把函数一起提升, 也就是在函数定义之前, 可以调用函数, **js 解析器在执行阶段, 遇见函数声明时会跳过, 不再进行解析,**
+    - 函数自身内部也存在变量提升, 原理同上
 
 
         a(); => something
@@ -123,28 +120,28 @@
 
 14. 对象
 
-- 对象是一些无序的属性的集合, 属性的值可以是原始类型, 也可以是引用类型
-- 创建对象
+    - 对象是一些无序的属性的集合, 属性的值可以是原始类型, 也可以是引用类型
+    - 创建对象
 
-    1. 可以是对象字面量的方式, 也可以是创建 Object 实例的方式
+        1. 可以是对象字面量的方式, 也可以是创建 Object 实例的方式
 
-            var obj = {
-                name: 'xiaoshier',
-                age: 20,
-                alertName: function(){
+                var obj = {
+                    name: 'xiaoshier',
+                    age: 20,
+                    alertName: function(){
+                        alert(this.name);
+                    }
+                }
+
+                var obj2 = new Object();
+                obj2.name = 'xiaoshier';
+                obj2.age = 20;
+                obj2.alertName = function(){
                     alert(this.name);
                 }
-            }
-
-            var obj2 = new Object();
-            obj2.name = 'xiaoshier';
-            obj2.age = 20;
-            obj2.alertName = function(){
-                alert(this.name);
-            }
 
 
-    2. 使用其他方式, 创建格式相同的对象
+        2. 使用其他方式, 创建格式相同的对象
 
     - 构造函数
                 
@@ -227,53 +224,53 @@
 
 16. call 和 apply 
 
-func.call(thisArg[, args1[, ...]]), func.apply(thisArg[, [args1, args2, ...]])传递 `this` 值, 并直接调用函数
+        func.call(thisArg[, args1[, ...]]), func.apply(thisArg[, [args1, args2, ...]])传递 `this` 值, 并直接调用函数
 
 
 17. setTimeout(fn, time) 
 
-异步执行函数, 调用setTimeout时，把函数参数，放到事件队列中。等主程序运行完，再调用。  
-过 time 时间后, 把 fn 事件放入实践队列中,  
-若事件队列中为空时,执行 fn;  
-如果事件队列不为空, 那就等事件队列执行完毕后, 再执行 fn
+    异步执行函数, 调用setTimeout时，把函数参数，放到事件队列中。等主程序运行完，再调用。  
+    过 time 时间后, 把 fn 事件放入实践队列中,  
+    若事件队列中为空时,执行 fn;  
+    如果事件队列不为空, 那就等事件队列执行完毕后, 再执行 fn
 
-    for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < 3; i++) {
+            setTimeout(function() {
+                    console.log(i);
+                    }, 0);
+            console.log(i);
+        }
+        0, 1, 2, 3, 3, 3
+
+    等价于
+
+        var i = 0;
         setTimeout(function() {
                 console.log(i);
                 }, 0);
         console.log(i);
-    }
-    0, 1, 2, 3, 3, 3
-
-等价于
-
-    var i = 0;
-    setTimeout(function() {
-            console.log(i);
-            }, 0);
-    console.log(i);
-    i++;
-    setTimeout(function() {
-            console.log(i);
-            }, 0);
-    console.log(i);
-    i++;
-    setTimeout(function() {
-            console.log(i);
-            }, 0);
-    console.log(i);
-    i++;
+        i++;
+        setTimeout(function() {
+                console.log(i);
+                }, 0);
+        console.log(i);
+        i++;
+        setTimeout(function() {
+                console.log(i);
+                }, 0);
+        console.log(i);
+        i++;
 
 
 18. 枚举一个对象所有属性
-引用类型自己封装的属性, 均是不可枚举属性 
+    引用类型自己封装的属性, 均是不可枚举属性 
 
-- for ... in 依次访问一个对象及其原型链中可枚举的属性
-- Object.keys(obj) 返回访问 obj 中不包含原型中的所有属性名称的数组
-- Object.hasOwnPropertyNames(obj) 返回一个包含 obj 自己拥有的属性名称的数组
+    - for ... in 依次访问一个对象及其原型链中可枚举的属性
+    - Object.keys(obj) 返回访问 obj 中不包含原型中的所有属性名称的数组
+    - Object.hasOwnPropertyNames(obj) 返回一个包含 obj 自己拥有的属性名称的数组
 
 
 19. 浅拷贝 深拷贝
 
-浅拷贝是内存地址的拷贝, 拷贝对象和源对象的指针 指向同一个存储空间
-深拷贝是把值进行拷贝, 拷贝对象和源对象有各自独立的内存地址
+    浅拷贝是内存地址的拷贝, 拷贝对象和源对象的指针 指向同一个存储空间
+    深拷贝是把值进行拷贝, 拷贝对象和源对象有各自独立的内存地址
